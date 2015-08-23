@@ -1,3 +1,4 @@
+![Header](/resources/headers/header_2.png)
 # WatApp
 Pebble app that displays information about the University of Waterloo
 
@@ -13,3 +14,6 @@ This app uses the [Watelerloo Open Data API](https://api.uwaterloo.ca/) to retri
 * Coop Infosessions - Displays employer infosessions for the current term
 * Goose Watch - Displays reports geese locations including reported times
 * Holidays - Displays upcoming University holidays
+
+### Screenshots
+![Main Menu](/resources/screenshots/screenshot_1.png) ![Food Services Menu](/resources/screenshots/screenshot_2.png) ![Food Services Locations](/resources/screenshots/screenshot_3.png) ![Coop Infosessions](/resources/screenshots/screenshot_4.png)
