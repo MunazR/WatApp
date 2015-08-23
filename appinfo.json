@@ -1,0 +1,48 @@
+{
+    "appKeys": {},
+    "capabilities": [
+        ""
+    ],
+    "companyName": "munaz_rahman@yahoo.com",
+    "longName": "WatApp",
+    "projectType": "pebblejs",
+    "resources": {
+        "media": [
+            {
+                "file": "images/menu_icon.png",
+                "name": "IMAGE_MENU_ICON",
+                "type": "png"
+            },
+            {
+                "file": "images/logo_splash.png",
+                "name": "IMAGE_LOGO_SPLASH",
+                "type": "png"
+            },
+            {
+                "file": "images/tile_splash.png",
+                "name": "IMAGE_TILE_SPLASH",
+                "type": "png"
+            },
+            {
+                "file": "fonts/UbuntuMono-Regular.ttf",
+                "name": "MONO_FONT_14",
+                "type": "font"
+            },
+            {
+                "file": "images/WatApp-Logo.png",
+                "menuIcon": true,
+                "name": "IMAGES_WATAPP_LOGO_PNG",
+                "type": "png"
+            }
+        ]
+    },
+    "sdkVersion": "3",
+    "shortName": "WatApp",
+    "uuid": "58f62ccf-33e8-4bc6-a61a-7495fedb8101",
+    "versionCode": 1,
+    "versionLabel": "1.0",
+    "watchapp": {
+        "hiddenApp": false,
+        "watchface": false
+    }
+}
