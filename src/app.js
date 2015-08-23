@@ -1,9 +1,3 @@
-/**
- * Welcome to Pebble.js!
- *
- * This is where you write your app.
- */
-
 var UI = require('ui');
 var AJAX = require('ajax');
 var Vector2 = require('vector2');
@@ -17,25 +11,28 @@ var menu = new UI.Menu({
     title: "WatApp",
     items: [{
       title: 'Weather',
-      subtitle: 'View current weather'
+      subtitle: 'Local weather'
     }, {
-      title: 'Food Locations',
-      subtitle: 'View restaurant information'
+      title: 'Food Services',
+      subtitle: 'Location information'
+    }, {
+      title: 'Food Services',
+      subtitle: 'Menu'
     }, {
       title: 'News',
-      subtitle: 'View recent news'
+      subtitle: 'Recent news'
     }, {
       title: 'Events',
-      subtitle: 'View upcoming events'
+      subtitle: 'Upcoming events'
     }, {
-      title: 'Coop Infosessions',
-      subtitle: 'View term infosessions'
+      title: 'Coop',
+      subtitle: 'Term infosessions'
     }, {
       title: 'Goose Watch',
-      subtitle: 'View reported geese'
+      subtitle: 'Geese locations'
     }, {
       title: 'Holidays',
-      subtitle: 'View upcoming holidays'
+      subtitle: 'Upcoming holidays'
     }]
   }]
 });
@@ -106,9 +103,18 @@ menu.on('select', function (e) {
           foodServicesObject = {
             title: data[i].outlet_name,
             subtitle: data[i].is_open_now ? "Open" : "Closed",
-            body: "Description: " + data[i].description + "\nBuilding: " +
-              data[i].building + "\nNotice: " + data[i].notice + "\nHours of Operation: "
+            body: "Building: " + data[i].building
           };
+
+          if (data[i].description) {
+            foodServicesObject.body += "\nDescription: " + data[i].description;
+          }
+
+          if (data[i].notice) {
+            foodServicesObject.body += "\nNotice: " + data[i].notice;
+          }
+
+          data[i].body += "\nHours of operation: ";
 
           if (data[i].opening_hours.sunday.is_closed === true) {
             foodServicesObject.body += "\nSunday: Closed";
@@ -147,9 +153,9 @@ menu.on('select', function (e) {
           }
 
           if (data[i].opening_hours.saturday.is_closed === true) {
-            foodServicesObject.body += "\nSatday: Closed";
+            foodServicesObject.body += "\nSaturday: Closed";
           } else {
-            foodServicesObject.body += "\nSatday: " + data[i].opening_hours.saturday.opening_hour + " to " + data[i].opening_hours.saturday.closing_hour;
+            foodServicesObject.body += "\nSaturday: " + data[i].opening_hours.saturday.opening_hour + " to " + data[i].opening_hours.saturday.closing_hour;
           }
 
           foodLocationItems.push(foodServicesObject);
@@ -157,7 +163,7 @@ menu.on('select', function (e) {
 
         var foodLocationMenu = new UI.Menu({
           sections: [{
-            title: "Food Locations",
+            title: "Locations",
             items: foodLocationItems
           }]
         });
@@ -175,6 +181,88 @@ menu.on('select', function (e) {
       },
       errorHandler);
   } else if (e.itemIndex === 2) {
+    options = {
+      url: config.baseUri + "/foodservices/menu.json?key=" + config.apiKey,
+      type: "json"
+    };
+    AJAX(options,
+      function (response) {
+        loadingWindow.hide();
+        var data = response.data.outlets;
+        var foodMenuItems = [];
+        var i;
+
+        for (i = 0; i < data.length && i < 25; i++) {
+          foodMenuItems.push({
+            title: data[i].outlet_name,
+            body: data[i].menu,
+          });
+        }
+
+        var foodMenu = new UI.Menu({
+          sections: [{
+            title: "Menu",
+            items: foodMenuItems
+          }]
+        });
+
+        foodMenu.on('select', function (e) {
+          var foodOutletItems = [];
+          for (i = 0; i < e.item.body.length; i++) {
+            foodOutletItems.push({
+              title: e.item.body[i].day,
+              body: e.item.body[i]
+            });
+          }
+          var foodOutletMenu = new UI.Menu({
+            sections: [{
+              title: e.item.title,
+              items: foodOutletItems
+            }]
+          });
+
+          foodOutletMenu.on('select', function (e) {
+            var foodOutletInfo = {
+              subtitle: e.item.title,
+              body: ""
+            };
+
+            if (e.item.body.meals.lunch.length > 0) {
+              foodOutletInfo.body += "\nLunch";
+            }
+            for (i = 0; i < e.item.body.meals.lunch.length; i++) {
+              foodOutletInfo.body += "\n" + e.item.body.meals.lunch[i].product_name;
+              if (e.item.body.meals.lunch[i].diet_type) {
+                foodOutletInfo.body += " (" + e.item.body.meals.lunch[i].diet_type + ")";
+              }
+            }
+
+            if (e.item.body.meals.dinner.length > 0) {
+              foodOutletInfo.body += "\nDinner";
+            }
+            for (i = 0; i < e.item.body.meals.dinner.length; i++) {
+              foodOutletInfo.body += "\n" + e.item.body.meals.dinner[i].product_name;
+              if (e.item.body.meals.dinner[i].diet_type) {
+                if (e.item.body.meals.dinner[i].diet_type) {
+                  foodOutletInfo.body += " (" + e.item.body.meals.dinner[i].diet_type + ")";
+                }
+              }
+            }
+
+            if (e.item.body.notes) {
+              foodOutletInfo.body += "\n\nNotes: " + e.item.body.notes;
+            }
+
+            var foodOutletCard = new UI.Card(foodOutletInfo);
+            foodOutletCard.show();
+          });
+
+          foodOutletMenu.show();
+        });
+        foodMenu.show();
+      },
+      errorHandler);
+  } else if (e.itemIndex === 3) {
     options = {
       url: config.baseUri + "/news.json?key=" + config.apiKey,
       type: "json"
@@ -211,7 +299,7 @@ menu.on('select', function (e) {
         newsMenu.show();
       },
       errorHandler);
-  } else if (e.itemIndex === 3) {
+  } else if (e.itemIndex === 4) {
     options = {
       url: config.baseUri + "/events.json?key=" + config.apiKey,
       type: "json"
@@ -257,7 +345,7 @@ menu.on('select', function (e) {
         eventMenu.show();
       },
       errorHandler);
-  } else if (e.itemIndex === 4) {
+  } else if (e.itemIndex === 5) {
     options = {
       url: config.baseUri + "/resources/infosessions.json?key=" + config.apiKey,
       type: "json"
@@ -295,7 +383,7 @@ menu.on('select', function (e) {
         infoSessionMenu.show();
       },
       errorHandler);
-  } else if (e.itemIndex === 5) {
+  } else if (e.itemIndex === 6) {
     options = {
       url: config.baseUri + "/resources/goosewatch.json?key=" + config.apiKey,
       type: "json"
@@ -332,7 +420,7 @@ menu.on('select', function (e) {
         gooseMenu.show();
       },
       errorHandler);
-  } else if (e.itemIndex === 6) {
+  } else if (e.itemIndex === 7) {
     options = {
       url: config.baseUri + "/events/holidays.json?key=" + config.apiKey,
       type: "json"
