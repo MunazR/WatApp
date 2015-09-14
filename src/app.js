@@ -1,10 +1,7 @@
 var UI = require('ui');
 var AJAX = require('ajax');
 var Vector2 = require('vector2');
-var config = {
-  baseUri: "https://api.uwaterloo.ca/v2",
-  apiKey: "INSERT API KEY HERE"
-};
+var config = require('config');
 
 var menu = new UI.Menu({
   sections: [{
@@ -224,7 +221,8 @@ menu.on('select', function (e) {
           foodOutletMenu.on('select', function (e) {
             var foodOutletInfo = {
               subtitle: e.item.title,
-              body: ""
+              body: "",
+              scrollable: true
             };
 
             if (e.item.body.meals.lunch.length > 0) {
