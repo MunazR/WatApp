@@ -3,7 +3,7 @@
 Pebble app that displays information about the University of Waterloo
 
 ### Waterloo Open Data API
-This app uses the [Watelerloo Open Data API](https://api.uwaterloo.ca/) to retrieve all information. An API key is required to access this API. You must use your own API key for the app to function. You can insert your API key in [app.js](https://github.com/MunazR/WatApp/blob/master/src/app.js).
+This app uses the [Watelerloo Open Data API](https://api.uwaterloo.ca/) to retrieve all information. An API key is required to access this API. You must use your own API key for the app to function. You can insert your API key in [config.js](https://github.com/MunazR/WatApp/blob/master/src/config.js).
 
 ### Services
 * Weather - Displays the University weather forecast for the day.
