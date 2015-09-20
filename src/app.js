@@ -25,9 +25,6 @@ var menu = new UI.Menu({
       title: 'Coop',
       subtitle: 'Term infosessions'
     }, {
-      title: 'Goose Watch',
-      subtitle: 'Geese locations'
-    }, {
       title: 'Holidays',
       subtitle: 'Upcoming holidays'
     }]
@@ -236,7 +233,7 @@ menu.on('select', function (e) {
             }
 
             if (e.item.body.meals.dinner.length > 0) {
-              foodOutletInfo.body += "\nDinner";
+              foodOutletInfo.body += "\n\nDinner";
             }
             for (i = 0; i < e.item.body.meals.dinner.length; i++) {
               foodOutletInfo.body += "\n" + e.item.body.meals.dinner[i].product_name;
@@ -310,6 +307,7 @@ menu.on('select', function (e) {
         var i, j;
         var eventMsg;
         var startDate, endDate;
+        
         for (i = 0; i < data.length && i < 25; i++) {
           eventMsg = {
             title: data[i].site_name,
@@ -352,6 +350,13 @@ menu.on('select', function (e) {
       function (response) {
         loadingWindow.hide();
         var data = response.data;
+        
+        var today = new Date();
+        data = data.filter(function(item) {
+          var date = new Date(item.date);
+          return date >= today;
+        });
+        
         var infoSessionItems = [];
         var i;
         for (i = 0; i < data.length && i < 25; i++) {
@@ -382,43 +387,6 @@ menu.on('select', function (e) {
       },
       errorHandler);
   } else if (e.itemIndex === 6) {
-    options = {
-      url: config.baseUri + "/resources/goosewatch.json?key=" + config.apiKey,
-      type: "json"
-    };
-    AJAX(options,
-      function (response) {
-        loadingWindow.hide();
-        var data = response.data;
-        var gooseItems = [];
-        var updatedDate;
-        var i;
-        for (i = 0; i < data.length && i < 20; i++) {
-          updatedDate = new Date(data[i].updated);
-          gooseItems.push({
-            title: data[i].location,
-            subtitle: updatedDate.toDateString(),
-          });
-        }
-
-        var gooseMenu = new UI.Menu({
-          sections: [{
-            title: "Goose Watch",
-            items: gooseItems
-          }]
-        });
-        gooseMenu.on('select', function (e) {
-          var gooseCard = new UI.Card({
-            title: e.item.title,
-            body: "Reported on " + e.item.subtitle,
-            scrollable: true
-          });
-          gooseCard.show();
-        });
-        gooseMenu.show();
-      },
-      errorHandler);
-  } else if (e.itemIndex === 7) {
     options = {
       url: config.baseUri + "/events/holidays.json?key=" + config.apiKey,
       type: "json"
