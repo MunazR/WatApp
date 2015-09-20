@@ -12,7 +12,6 @@ This app uses the [Watelerloo Open Data API](https://api.uwaterloo.ca/) to retri
 * News - Displays recent University news headlines
 * Events - Displays upcoming University events including times
 * Coop Infosessions - Displays employer infosessions for the current term
-* Goose Watch - Displays reports geese locations including reported times
 * Holidays - Displays upcoming University holidays
 
 ### Screenshots
