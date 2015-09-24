@@ -16,12 +16,6 @@ var menu = new UI.Menu({
       title: 'Food Services',
       subtitle: 'Menu'
     }, {
-      title: 'News',
-      subtitle: 'Recent news'
-    }, {
-      title: 'Events',
-      subtitle: 'Upcoming events'
-    }, {
       title: 'Coop',
       subtitle: 'Term infosessions'
     }, {
@@ -259,90 +253,6 @@ menu.on('select', function (e) {
       errorHandler);
   } else if (e.itemIndex === 3) {
     options = {
-      url: config.baseUri + "/news.json?key=" + config.apiKey,
-      type: "json"
-    };
-    AJAX(options,
-      function (response) {
-        loadingWindow.hide();
-        var data = response.data;
-        var newsItems = [];
-        var i;
-
-        for (i = 0; i < data.length && i < 25; i++) {
-          newsItems.push({
-            title: data[i].title,
-            subtitle: data[i].site
-          });
-        }
-
-        var newsMenu = new UI.Menu({
-          sections: [{
-            title: "News",
-            items: newsItems
-          }]
-        });
-
-        newsMenu.on('select', function (e) {
-          var newsCard = new UI.Card({
-            subtitle: e.item.subtitle,
-            body: e.item.title,
-            scrollable: true
-          });
-          newsCard.show();
-        });
-        newsMenu.show();
-      },
-      errorHandler);
-  } else if (e.itemIndex === 4) {
-    options = {
-      url: config.baseUri + "/events.json?key=" + config.apiKey,
-      type: "json"
-    };
-    AJAX(options,
-      function (response) {
-        loadingWindow.hide();
-        var data = response.data;
-        var eventItems = [];
-        var i, j;
-        var eventMsg;
-        var startDate, endDate;
-        
-        for (i = 0; i < data.length && i < 25; i++) {
-          eventMsg = {
-            title: data[i].site_name,
-            subtitle: data[i].title,
-            body: 'Times:\n'
-          };
-          for (j = 0; j < data[i].times.length; j++) {
-            startDate = new Date(data[i].times[j].start);
-            endDate = new Date(data[i].times[j].end);
-            eventMsg.body += startDate.toLocaleString() + " to " + endDate.toLocaleString() + "\n";
-          }
-          eventItems.push(eventMsg);
-        }
-
-        var eventMenu = new UI.Menu({
-          sections: [{
-            title: "Events",
-            items: eventItems
-          }]
-        });
-
-        eventMenu.on('select', function (e) {
-          var eventsCard = new UI.Card({
-            title: e.item.title,
-            subtitle: e.item.subtitle,
-            body: e.item.body,
-            scrollable: true
-          });
-          eventsCard.show();
-        });
-        eventMenu.show();
-      },
-      errorHandler);
-  } else if (e.itemIndex === 5) {
-    options = {
       url: config.baseUri + "/resources/infosessions.json?key=" + config.apiKey,
       type: "json"
     };
@@ -350,34 +260,39 @@ menu.on('select', function (e) {
       function (response) {
         loadingWindow.hide();
         var data = response.data;
-        
+        var i;
         var today = new Date();
         data = data.filter(function(item) {
-          var date = new Date(item.date);
+          var date = new Date(item.date + " " + item.end_time);
           return date >= today;
         });
-        
+
+        var infoSessionSections = [];
         var infoSessionItems = [];
-        var i;
-        for (i = 0; i < data.length && i < 25; i++) {
+        for (i = 0; i < data.length; i++) {
+          if (i !== 0 && data[i].date !== data[i - 1].date) {
+             infoSessionSections.push({
+               title: data[i - 1].date,
+              items: infoSessionItems
+            });
+              
+            infoSessionItems = [];
+          }
+
           infoSessionItems.push({
             title: data[i].employer,
-            subtitle: data[i].date,
-            body: data[i].location + "\n" + data[i].start_time + " to " + data[i].end_time
+            subtitle: data[i].start_time + " to " + data[i].end_time,
+            body: data[i].date + "\n" + data[i].start_time + " to " + data[i].end_time + "\n" + data[i].location + "\n\n" + data[i].programs
           });
         }
 
         var infoSessionMenu = new UI.Menu({
-          sections: [{
-            title: "Coop Infosessions",
-            items: infoSessionItems
-          }]
+          sections: infoSessionSections
         });
 
         infoSessionMenu.on('select', function (e) {
           var infoSessionCard = new UI.Card({
             title: e.item.title,
-            subtitle: e.item.subtitle,
             body: e.item.body,
             scrollable: true
           });
@@ -386,7 +301,7 @@ menu.on('select', function (e) {
         infoSessionMenu.show();
       },
       errorHandler);
-  } else if (e.itemIndex === 6) {
+  } else if (e.itemIndex === 4) {
     options = {
       url: config.baseUri + "/events/holidays.json?key=" + config.apiKey,
       type: "json"
