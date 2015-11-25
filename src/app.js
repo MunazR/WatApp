@@ -11,13 +11,13 @@ var menu = new UI.Menu({
       subtitle: 'Local weather'
     }, {
       title: 'Food Services',
-      subtitle: 'Location information'
+      subtitle: 'Outlet details'
     }, {
       title: 'Food Services',
-      subtitle: 'Menu'
+      subtitle: 'Outlet menus'
     }, {
-      title: 'Coop',
-      subtitle: 'Term infosessions'
+      title: 'Employers',
+      subtitle: 'Information sessions'
     }, {
       title: 'Holidays',
       subtitle: 'Upcoming holidays'
@@ -316,6 +316,7 @@ menu.on('select', function (e) {
         var i;
         for (i = 0; i < data.length; i++) {
           holidayDate = new Date(data[i].date);
+          holidayDate.setDate(holidayDate.getDate() + 1);
           if (holidayDate >= currentDate) {
             holidayItems.push({
               title: data[i].name,
