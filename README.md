@@ -11,6 +11,7 @@ This app uses the [Watelerloo Open Data API](https://api.uwaterloo.ca/) to retri
 * Food Services Menu - Displays the weekly menu (lunch and dinner) for food service outlets.
 * Employers - Displays employer information sessions including location, time and targeted disciplines.
 * Holidays - Displays upcoming University holidays.
+* Parking availability - Displays the number of available spots in parking lots
 
 ### Screenshots
-![Main Menu](/resources/screenshots/screenshot_1.png) ![Food Services Menu](/resources/screenshots/screenshot_2.png) ![Food Services Locations](/resources/screenshots/screenshot_3.png) ![Coop Infosessions](/resources/screenshots/screenshot_4.png)
+![Main Menu](/resources/screenshots/screenshot_1.png) ![Food Services Menu](/resources/screenshots/screenshot_2.png) ![Food Services Locations](/resources/screenshots/screenshot_3.png) ![Coop Infosessions](/resources/screenshots/screenshot_4.png) ![Parking](/resources/screenshots/screenshot_5.png)
