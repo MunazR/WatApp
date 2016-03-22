@@ -11,17 +11,17 @@
             {
                 "file": "images/menu_icon.png",
                 "name": "IMAGE_MENU_ICON",
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "images/logo_splash.png",
                 "name": "IMAGE_LOGO_SPLASH",
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "images/tile_splash.png",
                 "name": "IMAGE_TILE_SPLASH",
-                "type": "png"
+                "type": "bitmap"
             },
             {
                 "file": "fonts/UbuntuMono-Regular.ttf",
@@ -32,7 +32,7 @@
                 "file": "images/WatApp-Logo.png",
                 "menuIcon": true,
                 "name": "IMAGES_WATAPP_LOGO_PNG",
-                "type": "png"
+                "type": "bitmap"
             }
         ]
     },
@@ -44,7 +44,7 @@
     ],
     "uuid": "58f62ccf-33e8-4bc6-a61a-7495fedb8101",
     "versionCode": 1,
-    "versionLabel": "1.4",
+    "versionLabel": "1.5",
     "watchapp": {
         "hiddenApp": false,
         "watchface": false

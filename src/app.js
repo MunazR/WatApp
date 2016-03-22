@@ -21,11 +21,14 @@ var menu = new UI.Menu({
     }, {
       title: 'Holidays',
       subtitle: 'Upcoming holidays'
+    }, {
+      title: 'Parking',
+      subtitle: 'Lot availability'
     }]
   }]
 });
 
-menu.on('select', function (e) {
+menu.on('select', function(e) {
   var loadingWindow = new UI.Window();
   var text = new UI.Text({
     position: new Vector2(0, 0),
@@ -41,7 +44,7 @@ menu.on('select', function (e) {
   loadingWindow.add(text);
   loadingWindow.show();
 
-  var errorHandler = function (err) {
+  var errorHandler = function(err) {
     if (err) {
       console.log(err);
       loadingWindow.hide();
@@ -62,7 +65,7 @@ menu.on('select', function (e) {
       type: "json"
     };
     AJAX(options,
-      function (response) {
+      function(response) {
         loadingWindow.hide();
         var data = response.data;
         var weatherCard = new UI.Card({
@@ -80,7 +83,7 @@ menu.on('select', function (e) {
       type: "json"
     };
     AJAX(options,
-      function (response) {
+      function(response) {
         loadingWindow.hide();
         var data = response.data;
         var foodLocationItems = [];
@@ -156,7 +159,7 @@ menu.on('select', function (e) {
           }]
         });
 
-        foodLocationMenu.on('select', function (e) {
+        foodLocationMenu.on('select', function(e) {
           var foodLcoationCard = new UI.Card({
             title: e.item.title,
             subtitle: e.item.subtitle,
@@ -174,7 +177,7 @@ menu.on('select', function (e) {
       type: "json"
     };
     AJAX(options,
-      function (response) {
+      function(response) {
         loadingWindow.hide();
         var data = response.data.outlets;
         var foodMenuItems = [];
@@ -194,7 +197,7 @@ menu.on('select', function (e) {
           }]
         });
 
-        foodMenu.on('select', function (e) {
+        foodMenu.on('select', function(e) {
           var foodOutletItems = [];
           for (i = 0; i < e.item.body.length; i++) {
             foodOutletItems.push({
@@ -209,7 +212,7 @@ menu.on('select', function (e) {
             }]
           });
 
-          foodOutletMenu.on('select', function (e) {
+          foodOutletMenu.on('select', function(e) {
             var foodOutletInfo = {
               subtitle: e.item.title,
               body: "",
@@ -257,7 +260,7 @@ menu.on('select', function (e) {
       type: "json"
     };
     AJAX(options,
-      function (response) {
+      function(response) {
         loadingWindow.hide();
         var data = response.data;
         var i;
@@ -271,11 +274,11 @@ menu.on('select', function (e) {
         var infoSessionItems = [];
         for (i = 0; i < data.length; i++) {
           if (i !== 0 && data[i].date !== data[i - 1].date) {
-             infoSessionSections.push({
-               title: data[i - 1].date,
+            infoSessionSections.push({
+              title: data[i - 1].date,
               items: infoSessionItems
             });
-              
+
             infoSessionItems = [];
           }
 
@@ -290,7 +293,7 @@ menu.on('select', function (e) {
           sections: infoSessionSections
         });
 
-        infoSessionMenu.on('select', function (e) {
+        infoSessionMenu.on('select', function(e) {
           var infoSessionCard = new UI.Card({
             title: e.item.title,
             body: e.item.body,
@@ -307,7 +310,7 @@ menu.on('select', function (e) {
       type: "json"
     };
     AJAX(options,
-      function (response) {
+      function(response) {
         loadingWindow.hide();
         var data = response.data;
         var holidayItems = [];
@@ -335,6 +338,33 @@ menu.on('select', function (e) {
         holidayMenu.show();
       },
       errorHandler);
+  } else if (e.itemIndex === 5) {
+    options = {
+      url: config.baseUri + "/parking/watpark.json?key=" + config.apiKey,
+      type: "json"
+    };
+    AJAX(options, function(response) {
+      loadingWindow.hide();
+      var data = response.data;
+      var parkingItems = [];
+
+      for (var i = 0; i < data.length; i++) {
+        parkingItems.push({
+          title: "Lot " + data[i].lot_name + " - " + data[i].percent_filled + "% full",
+          subtitle: data[i].current_count + "/" + data[i].capacity
+        });
+      }
+
+      var parkingMenu = new UI.Menu({
+        sections: [{
+          title: "Parking Lots",
+          items: parkingItems
+        }]
+      });
+
+      parkingMenu.show();
+
+    }, errorHandler);
   }
 });
 
